@@ -90,24 +90,16 @@ printTitle lang = do
                       ,"If you're not familiar with Linux, here is a tutorial about the"]
         lmas lang 4 1 ["piu' importanti che ti troverai ad utilizzare."
                       ,"most common features you'll need to use."]
-        setCol YellowOnBlack
-        lmas lang 5 1 ["l", "l"]
-        setCol CyanOnBlack
-        case lang of
-                Italian -> wAddStr stdScr ": cambia lingua"
-                English -> wAddStr stdScr ": change language"
-        setCol YellowOnBlack
-        lmas lang 6 1 ["Invio", "Enter"]
-        setCol CyanOnBlack
-        case lang of
-                Italian -> wAddStr stdScr ": seleziona"
-                English -> wAddStr stdScr ": select"
-        setCol YellowOnBlack
-        lmas lang 7 1 ["q", "q"]
-        setCol CyanOnBlack
-        case lang of
-                Italian -> wAddStr stdScr ": esci"
-                English -> wAddStr stdScr ": exit"
+        addOpt 5 1 ["l", "l"] [": cambia lingua", ": change language"]
+        addOpt 6 1 ["Invio", "Enter"] [": seleziona", ": select"]
+        addOpt 7 1 ["q", "q"] [": esci", ": exit"]
+        where
+        addOpt :: Int -> Int -> [String] -> [String] -> IO ()
+        addOpt row col cmds descs = do
+                setCol YellowOnBlack
+                lmas lang row col cmds
+                setCol CyanOnBlack
+                wAddStr stdScr $ descs !! (fromEnum lang)
 
 -- The list of available pages from main page
 printMainList = printList [(PageTerm,     ["Comandi di base del terminale"
@@ -143,7 +135,7 @@ printList pages lang line = do
                 KeyDown      -> printList pages lang $ (line + 1) `mod` nLines
                 KeyEnter     -> printInfo lang $ fst $ pages !! line
                 KeyChar '\n' -> printInfo lang $ fst $ pages !! line
-                _ -> return () -- ignore
+                _            -> return () -- ignore
 
 
 printLines :: Language -> Int -> Int -> [(Page, [String])] -> IO ()
@@ -384,7 +376,7 @@ printInfo lang page = do
                 setCol WhiteOnBlack
                 l 2 2 ["welcometolcm 2.0", "welcometolcm 2.0"]
                 l 3 2 ["Creato il: 4 Set 2015 (jp)", "Created on: 4 Sep 2015 (jp)"]
-                l 4 2 ["Ultima modifica: 4 Set 2015 (jp)", "Last Modified: 4 Set 2015 (jp)"]
+                l 4 2 ["Ultima modifica: 26 Mar 2016 (jp)", "Last Modified: 26 Mar 2016 (jp)"]
                 setCol CyanOnBlack
                 l 6 2  ["Questo programma viene eseguito di default durante il primo login"
                        ,"This program is executed by default during the first login"]
